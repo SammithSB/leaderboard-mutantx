@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const routes = require('./routes/main.js');
 const secureRoutes = require('./routes/secure.js');
+const users = require('./routes/users.js');
 const mongoose = require('mongoose');
 const uri = process.env.MONGO_CONNECTION_URL;
 mongoose.connect(uri, );
@@ -29,17 +30,9 @@ app.use(bodyParser.json()); // parse application/json
 // main routes
 app.use('/', routes);
 app.use('/', secureRoutes);
+app.use('/', users);
 
-// catch all other routes
-app.use((req, res, next) => {
-  res.status(404);
-  res.json({ message: '404 - Not Found' });
-});
-// handle errors
-app.use((err, req, res, next) => {
-  res.status(err.status || 500);
-  res.json({ error : err });
-});
+
 // have the server start listening on the provided port
 app.listen(process.env.PORT || 3000, () => {
   console.log(`Server started on port ${process.env.PORT || 3000}`);
