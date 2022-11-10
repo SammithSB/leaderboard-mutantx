@@ -33,8 +33,8 @@ router.get('/users', async function (req, res, next) {
     }
 )});
 
-router.get('/users/:id', async function (req, res, next) {
-    conn.collection('users').find({id: req.params.id}).toArray(function(err, result) {
+router.get('/users/:email', async function (req, res, next) {
+    conn.collection('users').find({email: req.params.email}).toArray(function(err, result) {
         if (err) throw err;
         res.json(result);
     }
@@ -44,7 +44,10 @@ router.post('/users', async function (req, res, next)  {
     // load model from models\userModel.js
     const UserModel = require('../models/userModel');
     // create a new user
-    const user = new UserModel({
+    let user = null;
+    console.log(user);
+    user = new UserModel({
+        _id: new mongoose.Types.ObjectId(),
         email: req.body.email,
         password: req.body.password,
         name: req.body.name,
@@ -64,20 +67,24 @@ router.post('/users', async function (req, res, next)  {
 });
 
 router.put('/users/:email', async function (req, res, next) {
-    if (req.body.id) {
-        delete req.body.id;
+    if (req.body.email) {
+        delete req.body.email;
     }
     if (req.body.isAdmin) {
         if (verify_password(req.body.current_email, req.body.current_password) && verify_admin(req.body.current_email)) {
             // remove current password and email
             delete req.body.current_password;
             delete req.body.current_email;
-            console.log(req.params.email);
-            console.log(req.body);
+            // conn.collection('users').updateOne({email: req.params.email}, {$set:req.body}, function(err, result) {
             conn.collection('users').updateOne({email: req.params.email}, {$set:{"isAdmin":true}}, function(err, result) {
+
                 if (err) throw err;
                 res.json(result);
-            }, {upsert: true});
+            },{upsert:true})
+            // conn.collection('users').updateOne({email: req.params.email}, {$set:{"isAdmin":true}}, function(err, result) {
+            //     if (err) throw err;
+            //     res.json(result);
+            // }, {upsert: true});
 
         } else {
             res.status(401);
@@ -91,9 +98,10 @@ router.put('/users/:email', async function (req, res, next) {
     // })
 });
 
-router.delete('/users/:id', async function (req, res, next)  {
-    if (verify_password(req.body.current_email, req.body.current_password) && verify_admin(req.body.current_email)) {        
-        conn.collection('users').deleteOne({id: req.params.id}, function(err, result) {
+router.delete('/users/:email', async function (req, res, next)  {
+    console.log(await verify_password(req.body.current_email, req.body.current_password), (await verify_admin(req.body.current_email), (req.params.email==req.body.current_email)))
+    if (await verify_password(req.body.current_email, req.body.current_password) && (await verify_admin(req.body.current_email) || (req.params.email==req.body.current_email))) {        
+        conn.collection('users').deleteOne({email: req.params.email}, function(err, result) {
             if (err) throw err;
             res.json(result);
         })
