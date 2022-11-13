@@ -41,29 +41,35 @@ router.get('/users/:email', async function (req, res, next) {
 )});
 
 router.post('/users', async function (req, res, next)  {
-    // load model from models\userModel.js
-    const UserModel = require('../models/userModel');
-    // create a new user
-    let user = null;
-    console.log(user);
-    user = new UserModel({
-        _id: new mongoose.Types.ObjectId(),
-        email: req.body.email,
-        password: req.body.password,
-        name: req.body.name,
-        score: 0,
-        isAdmin: false
-    });
-    console.log(user)
-    // write to mongodb database
-    user.save(function(err, result) {
-        if (err) throw err;
-        res.json(result);
-    })
-    conn.collection('users').insertOne(user, function(err, result) {
-        if (err) throw err;
-        res.json(result);
-    })
+    try{
+        // load model from models\userModel.js
+        const UserModel = require('../models/userModel');
+        // create a new user
+        let user = null;
+        console.log(user);
+        user = new UserModel({
+            _id: new mongoose.Types.ObjectId(),
+            email: req.body.email,
+            password: req.body.password,
+            name: req.body.name,
+            score: 0,
+            isAdmin: false
+        });
+        console.log(user)
+        // check if the user already exists
+        let userExists = await conn.collection('users').findOne({email: user.email});
+        if (userExists) {
+            res.status(400).json({message: 'User already exists'});
+            return;
+        } 
+
+        conn.collection('users').insertOne(user, function(err, result) {
+            if (err) throw err;
+            res.json(result);
+        })
+    } catch (err) {
+        console.log(err);
+    }
 });
 
 router.put('/users/:email', async function (req, res, next) {
