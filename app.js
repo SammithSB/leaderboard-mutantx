@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
-
+const index = require('./routes/index.js');
 const secureRoutes = require('./routes/secure.js');
 const users = require('./routes/users.js');
 const tracking = require('./routes/tracking.js');
@@ -39,7 +39,7 @@ app.use(bodyParser.json()); // parse application/json
 app.use('/', secureRoutes);
 app.use('/', users);
 app.use('/',tracking);
-
+app.use('/', index);
 router.get("/", function(req, res) {
     res.send("Hello World!");
 });
