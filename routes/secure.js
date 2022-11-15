@@ -33,6 +33,7 @@ router.post('/submit-score-20/:email', async function (req, res, next) {
 		if (user) {
 			// update the score
 			user.Score += 20;
+			user.ScoreChange =20;
       console.log(user);
 			// write to mongodb database
 			conn.collection('users').updateOne({email: req.params.email}, {$set:user}, function(err, result) {
@@ -59,6 +60,7 @@ router.post('/submit-score-60/:email', async function (req, res, next)  {
 		if (user) {
 			// update the score
 			user.Score += 60;
+			user.ScoreChange =60;
 			// write to mongodb database
 			conn.collection('users').updateOne({email: req.params.email}, {$set:user}, function(err, result) {
 				if (err) throw err;
@@ -82,6 +84,7 @@ router.post('/submit-score-100/:email', async function (req, res, next) {
 		if (user) {
 			// update the score
 			user.Score += 100;
+			user.ScoreChange =100;
 			// write to mongodb database
 			conn.collection('users').updateOne({email: req.params.email}, {$set:user}, function(err, result) {
 				if (err) throw err;

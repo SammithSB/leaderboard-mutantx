@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const routes = require('./routes/main.js');
 const secureRoutes = require('./routes/secure.js');
 const users = require('./routes/users.js');
+const tracking = require('./routes/tracking.js');
 const mongoose = require('mongoose');
 const uri = process.env.MONGO_CONNECTION_URL;
 mongoose.connect(uri, );
@@ -31,6 +32,7 @@ app.use(bodyParser.json()); // parse application/json
 app.use('/', routes);
 app.use('/', secureRoutes);
 app.use('/', users);
+app.use('/',tracking);
 
 
 // have the server start listening on the provided port

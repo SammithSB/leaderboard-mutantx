@@ -23,6 +23,10 @@ const UserSchema = new Schema({
 	isAdmin : {
 		type: Boolean,
 		default: false
+	},
+	ScoreChange : {
+		type: Number,
+		default: 0
 	}
 });
 UserSchema.pre('save', async function (next) {

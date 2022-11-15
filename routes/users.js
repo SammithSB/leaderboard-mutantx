@@ -53,7 +53,8 @@ router.post('/users', async function (req, res, next)  {
             password: req.body.password,
             name: req.body.name,
             score: 0,
-            isAdmin: false
+            isAdmin: false,
+            scoreChange: 0
         });
         console.log(user)
         // check if the user already exists
