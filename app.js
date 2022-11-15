@@ -1,13 +1,18 @@
 // reads in our .env file and makes those values available as environment variables
 require('dotenv').config();
 const express = require('express');
+const router = express.Router();
 const bodyParser = require('body-parser');
-const routes = require('./routes/main.js');
+
 const secureRoutes = require('./routes/secure.js');
 const users = require('./routes/users.js');
 const tracking = require('./routes/tracking.js');
 const mongoose = require('mongoose');
 const uri = process.env.MONGO_CONNECTION_URL;
+if (!uri) {
+  console.error('MONGO_CONNECTION_URL is not defined in .env file.\nIf the error comes in github actions, no syntax errors detected');
+  process.exit(0);
+}
 mongoose.connect(uri, );
 mongoose.connection.on('error', (error) => {
   console.log(error);
@@ -28,14 +33,19 @@ var user = {
 
 app.use(bodyParser.urlencoded({ extended: false })); // parse application/x-www-form-urlencoded
 app.use(bodyParser.json()); // parse application/json
+
 // main routes
-app.use('/', routes);
+
 app.use('/', secureRoutes);
 app.use('/', users);
 app.use('/',tracking);
 
-
+router.get("/", function(req, res) {
+    res.send("Hello World!");
+});
 // have the server start listening on the provided port
 app.listen(process.env.PORT || 3000, () => {
   console.log(`Server started on port ${process.env.PORT || 3000}`);
 });
+
+module.exports = app
