@@ -73,7 +73,7 @@ router.post('/users', async function (req, res, next)  {
     }
 });
 
-router.post('/users/:email', async function (req, res, next) {
+router.put('/users/:email', async function (req, res, next) {
     if (req.body.email) {
         delete req.body.email;
     }
