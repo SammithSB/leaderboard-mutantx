@@ -20,6 +20,10 @@ const UserSchema = new Schema({
 		type: Number,
 		default: 0
 	},
+	Rank: {
+		type: Number,
+		default: 0
+	},
 	isAdmin : {
 		type: Boolean,
 		default: false
@@ -27,6 +31,18 @@ const UserSchema = new Schema({
 	ScoreChange : {
 		type: Number,
 		default: 0
+	},
+	scoreHistory : {
+		type: Array,
+		default: []
+	},
+	RankChange : {
+		type: Number,
+		default: 0
+	},
+	rankHistory : {
+		type: Array,
+		default: []
 	}
 });
 
